@@ -1,0 +1,10 @@
+# Example requests. Try running `M-x restclient-test-buffer'.
+
+# Expect: 200 OK
+GET http://httpbin.org/get
+
+# Expect: 404 NOT FOUND
+GET http://httpbin.org/foo
+
+# Expect: 200 OK
+GET http://httpbin.org/bar

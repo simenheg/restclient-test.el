@@ -1,0 +1,42 @@
+* restclient-test.el
+~restclient-test.el~ helps you turn [[https://github.com/pashky/restclient.el][restclient.el]] documents into
+interactive test suites.
+
+Its functionality is captured by the following animation:
+
+#+ATTR_HTML: :width 544
+[[./example.gif]]
+
+** Usage
+A ~restclient.el~ query can be turned into a test by adding a comment
+line starting with ~Expect:~ somewhere before the query, followed by
+the expected status code. Currently only status code testing is
+supported.
+
+The test passes if the expected status code is a substring of the
+status code from running the query. So ~Expect: HTTP/1.1 200 OK~,
+~Expect: 200 OK~, ~Expect: 200~, and ~Expect: OK~ would all match an
+~HTTP/1.1 200 OK~ response.
+
+A full example is shown below.
+
+#+BEGIN_SRC restclient
+  # Expect: 200 OK
+  GET http://httpbin.org/get
+#+END_SRC
+
+Running ~M-x restclient-test-current~ with point inside the query
+updates the buffer with the results of the test:
+
+#+BEGIN_SRC restclient
+  # Expect: 200 OK
+  # Response: HTTP/1.1 200 OK
+  # Result: Passed
+  GET http://httpbin.org/get
+#+END_SRC
+
+Running ~M-x restclient-test-buffer~ runs every test found in the
+current buffer and displays a summary of the test results in the echo
+area.
+
+More examples can be found in [[file:example.http][example.http]].
