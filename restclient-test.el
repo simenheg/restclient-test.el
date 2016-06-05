@@ -55,7 +55,7 @@ value is saved at index 1."
 (defun restclient-test-current ()
   "Test query at point.
 When the test contains an \"Expect\" entry, return `pass' if the
-test passed and `fail' if the test failed. Else return nil.'"
+test passed and `fail' if the test failed.  Else return nil.'"
   (interactive)
   (save-window-excursion
     (save-excursion
