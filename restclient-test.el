@@ -125,5 +125,19 @@ forward, or backward with a negative argument."
   (interactive "p")
   (restclient-test-next-error (* arg -1)))
 
+;;;###autoload
+(define-minor-mode restclient-test-mode
+  "Minor mode with key-bindings for restclient-test commands.
+With a prefix argument ARG, enable the mode if ARG is positive,
+and disable it otherwise.  If called from Lisp, enable the mode
+if ARG is omitted or nil."
+  :lighter " REST Test"
+  :keymap `((,(kbd "C-c C-b") . restclient-test-buffer)
+            (,(kbd "C-c C-t") . restclient-test-current)
+            (,(kbd "M-g n") . restclient-test-next-error)
+            (,(kbd "M-g M-n") . restclient-test-next-error)
+            (,(kbd "M-g p") . restclient-test-previous-error)
+            (,(kbd "M-g M-p") . restclient-test-previous-error)))
+
 (provide 'restclient-test)
 ;;; restclient-test.el ends here
