@@ -18,7 +18,8 @@ status code from running the query. So ~Expect: HTTP/1.1 200 OK~,
 ~Expect: 200 OK~, ~Expect: 200~, and ~Expect: OK~ would all match an
 ~HTTP/1.1 200 OK~ response.
 
-A full example is shown below.
+A full example is shown below (more examples can be found in
+[[file:example.http][example.http]]).
 
 #+BEGIN_SRC restclient
   # Expect: 200 OK
@@ -39,4 +40,27 @@ Running ~M-x restclient-test-buffer~ runs every test found in the
 current buffer and displays a summary of the test results in the echo
 area.
 
-More examples can be found in [[file:example.http][example.http]].
+Use ~M-x restclient-test-next-error~ and ~M-x
+restclient-test-previous-error~ to quickly jump between failed tests.
+
+*** restclient-test-mode
+~restclient-test-mode~ is a minor mode that sets up key-bindings for
+the commands provided by ~restclient-test.el~.
+
+To make ~restclient-test-mode~ activate automatically when
+~restclient-mode~ is activated, add the following to your
+initialization file:
+
+#+BEGIN_SRC elisp
+  (add-hook 'restclient-mode-hook #'restclient-test-mode)
+#+END_SRC
+
+The following table summarizes the key-bindings set up by
+~restclient-test-mode~.
+
+| Key binding        | Command                          |
+|--------------------+----------------------------------|
+| ~C-c C-b~          | ~restclient-test-buffer~         |
+| ~C-c C-t~          | ~restclient-test-current~        |
+| ~M-g M-n~, ~M-g n~ | ~restclient-test-next-error~     |
+| ~M-g M-p~, ~M-g p~ | ~restclient-test-previous-error~ |
