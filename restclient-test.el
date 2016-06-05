@@ -106,5 +106,24 @@ test passed and `fail' if the test failed.  Else return nil.'"
                  (/= prev (point))))))
     (message "Test results: %d passed, %d failed" num-pass num-fail)))
 
+(defun restclient-test-next-error (arg)
+  "Jump to the first failed test found after point.
+The numeric argument ARG decides how many failed tests to jump
+forward, or backward with a negative argument."
+  (interactive "p")
+  (if (< arg 0)
+      (beginning-of-line)
+    (end-of-line))
+  (let ((found-failure (search-forward "Result: Failed" nil t arg)))
+    (beginning-of-line)
+    (unless found-failure
+      (message "No more failed tests %s point"
+               (if (< arg 0) "before" "after")))))
+
+(defun restclient-test-previous-error (arg)
+  "Jump to the first failed test found before point."
+  (interactive "p")
+  (restclient-test-next-error (* arg -1)))
+
 (provide 'restclient-test)
 ;;; restclient-test.el ends here
