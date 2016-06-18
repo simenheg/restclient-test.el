@@ -4,7 +4,7 @@
 
 ;; Author: Simen Heggestøyl <simenheg@gmail.com>
 ;; Created: 14 May 2016
-;; Version: 0.1
+;; Version: 0.2
 ;; Package-Requires: ((emacs "24.4") (restclient "0"))
 ;; Homepage: https://github.com/simenheg/restclient-test.el
 
