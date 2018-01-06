@@ -1,6 +1,6 @@
 ;;; restclient-test.el --- Run tests with restclient.el  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Simen Heggestøyl
+;; Copyright (C) 2016-2018 Simen Heggestøyl
 
 ;; Author: Simen Heggestøyl <simenheg@gmail.com>
 ;; Created: 14 May 2016
@@ -111,14 +111,16 @@ test passed and `fail' if the test failed.  Else return nil.'"
 The numeric argument ARG decides how many failed tests to jump
 forward, or backward with a negative argument."
   (interactive "p")
-  (if (< arg 0)
+  (let ((orig-pos (point)))
+    (if (< arg 0)
+        (beginning-of-line)
+      (end-of-line))
+    (let ((found-failure (search-forward "Result: Failed" nil t arg)))
       (beginning-of-line)
-    (end-of-line))
-  (let ((found-failure (search-forward "Result: Failed" nil t arg)))
-    (beginning-of-line)
-    (unless found-failure
-      (message "No more failed tests %s point"
-               (if (< arg 0) "before" "after")))))
+      (unless found-failure
+        (goto-char orig-pos)
+        (message "No more failed tests %s point"
+                 (if (< arg 0) "before" "after"))))))
 
 (defun restclient-test-previous-error (arg)
   "Jump to the first failed test found before point."
