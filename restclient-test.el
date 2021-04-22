@@ -1,11 +1,11 @@
 ;;; restclient-test.el --- Run tests with restclient.el  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016-2018 Simen Heggestøyl
+;; Copyright (C) 2016-2021 Simen Heggestøyl
 
-;; Author: Simen Heggestøyl <simenheg@gmail.com>
+;; Author: Simen Heggestøyl <simenheg@runbox.com>
 ;; Created: 14 May 2016
-;; Version: 0.2
-;; Package-Requires: ((emacs "24.4") (restclient "0"))
+;; Version: 0.3
+;; Package-Requires: ((emacs "26.1") (restclient "0"))
 ;; Homepage: https://github.com/simenheg/restclient-test.el
 
 ;; This file is not part of GNU Emacs.
@@ -83,6 +83,29 @@ test passed and `fail' if the test failed.  Else return nil.'"
                    "Result" (if passed "Passed" "Failed"))
                   (if passed 'pass 'fail))))))))))
 
+(defun restclient-test-flymake (report-fn &rest _args)
+  (let ((diags '()))
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward-regexp
+              "^# Expect: \\(.*\\)\n# Response: \\(.*\\)\n# Result: Failed$"
+              nil t)
+        (push
+         (flymake-make-diagnostic
+          (current-buffer)
+          (line-beginning-position)
+          (line-end-position)
+          :error
+          (format-message "Expected: `%s', got: `%s'"
+                          (match-string-no-properties 1)
+                          (match-string-no-properties 2)))
+         diags)))
+    (funcall report-fn diags)))
+
+(defun restclient-test-setup-flymake-backend ()
+  (add-hook
+   'flymake-diagnostic-functions #'restclient-test-flymake nil t))
+
 ;;;###autoload
 (defun restclient-test-buffer ()
   "Test every query in the current buffer."
@@ -110,6 +133,7 @@ test passed and `fail' if the test failed.  Else return nil.'"
   "Jump to the first failed test found after point.
 The numeric argument ARG decides how many failed tests to jump
 forward, or backward with a negative argument."
+  (declare (obsolete flymake-goto-next-error "0.3"))
   (interactive "p")
   (let ((orig-pos (point)))
     (if (< arg 0)
@@ -124,6 +148,7 @@ forward, or backward with a negative argument."
 
 (defun restclient-test-previous-error (arg)
   "Jump to the first failed test found before point."
+  (declare (obsolete flymake-goto-prev-error "0.3"))
   (interactive "p")
   (restclient-test-next-error (* arg -1)))
 
@@ -135,11 +160,8 @@ and disable it otherwise.  If called from Lisp, enable the mode
 if ARG is omitted or nil."
   :lighter " REST Test"
   :keymap `((,(kbd "C-c C-b") . restclient-test-buffer)
-            (,(kbd "C-c C-t") . restclient-test-current)
-            (,(kbd "M-g n") . restclient-test-next-error)
-            (,(kbd "M-g M-n") . restclient-test-next-error)
-            (,(kbd "M-g p") . restclient-test-previous-error)
-            (,(kbd "M-g M-p") . restclient-test-previous-error)))
+            (,(kbd "C-c C-t") . restclient-test-current))
+  (restclient-test-setup-flymake-backend))
 
 (provide 'restclient-test)
 ;;; restclient-test.el ends here

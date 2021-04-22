@@ -40,8 +40,9 @@ Running ~M-x restclient-test-buffer~ runs every test found in the
 current buffer and displays a summary of the test results in the echo
 area.
 
-Use ~M-x restclient-test-next-error~ and ~M-x
-restclient-test-previous-error~ to quickly jump between failed tests.
+~M-x flymake-goto-next-error~ and ~M-x flymake-goto-prev-error~ can be
+used to quickly jump between failed tests when ~flymake-mode~ is
+turned on.
 
 *** restclient-test-mode
 ~restclient-test-mode~ is a minor mode that sets up key-bindings for
@@ -55,6 +56,13 @@ initialization file:
   (add-hook 'restclient-mode-hook #'restclient-test-mode)
 #+END_SRC
 
+And to turn on Flymake automatically for ~restclient-test-mode~
+buffers:
+
+#+BEGIN_SRC elisp
+  (add-hook 'restclient-test-mode-hook #'flymake-mode)
+#+END_SRC
+
 The following table summarizes the key-bindings set up by
 ~restclient-test-mode~.
 
@@ -62,5 +70,3 @@ The following table summarizes the key-bindings set up by
 |--------------------+----------------------------------|
 | ~C-c C-b~          | ~restclient-test-buffer~         |
 | ~C-c C-t~          | ~restclient-test-current~        |
-| ~M-g M-n~, ~M-g n~ | ~restclient-test-next-error~     |
-| ~M-g M-p~, ~M-g p~ | ~restclient-test-previous-error~ |
