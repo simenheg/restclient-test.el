@@ -1,10 +1,10 @@
 ;;; restclient-test.el --- Run tests with restclient.el  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016-2021 Simen Heggestøyl
+;; Copyright (C) 2016-2024 Simen Heggestøyl
 
 ;; Author: Simen Heggestøyl <simenheg@runbox.com>
 ;; Created: 14 May 2016
-;; Version: 0.3
+;; Version: 1.0
 ;; Package-Requires: ((emacs "26.1") (restclient "0"))
 ;; Homepage: https://github.com/simenheg/restclient-test.el
 
@@ -128,29 +128,6 @@ test passed and `fail' if the test failed.  Else return nil.'"
                  (goto-char (restclient-current-min))
                  (/= prev (point))))))
     (message "Test results: %d passed, %d failed" num-pass num-fail)))
-
-(defun restclient-test-next-error (arg)
-  "Jump to the first failed test found after point.
-The numeric argument ARG decides how many failed tests to jump
-forward, or backward with a negative argument."
-  (declare (obsolete flymake-goto-next-error "0.3"))
-  (interactive "p")
-  (let ((orig-pos (point)))
-    (if (< arg 0)
-        (beginning-of-line)
-      (end-of-line))
-    (let ((found-failure (search-forward "Result: Failed" nil t arg)))
-      (beginning-of-line)
-      (unless found-failure
-        (goto-char orig-pos)
-        (message "No more failed tests %s point"
-                 (if (< arg 0) "before" "after"))))))
-
-(defun restclient-test-previous-error (arg)
-  "Jump to the first failed test found before point."
-  (declare (obsolete flymake-goto-prev-error "0.3"))
-  (interactive "p")
-  (restclient-test-next-error (* arg -1)))
 
 ;;;###autoload
 (define-minor-mode restclient-test-mode
